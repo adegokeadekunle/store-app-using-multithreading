@@ -17,7 +17,7 @@ public class CustomerOperationsImplTest {
     Store store = new Store("Damzxyno Food Store");
     Staff manager = new Staff("Wilfred", "Omokpo", Gender.MALE, Designation.MANAGER);
     Customer customer1 = new Customer("Tolani", "Oluwasegun", Gender.MALE);
-    String excelFilePath = "src/main/resources/excel_files/damzxyno_food_store.xlsx";
+    String excelFilePath = "src/main/resources/excel_files/decagon_Ent_products.xlsx";
 
     @Before
     public void setUp() throws NotAuthorizedException {

@@ -13,7 +13,7 @@ import java.util.List;
 public class Store {
     private final String storeName;
     private double storeAccount = 0.0;
-    private final List <Staff> staffList = new ArrayList<>();
-    private final List <Applicant> applicantList = new ArrayList<>();
-    private final Storage goods = new Storage();
+    private List <Staff> staffList = new ArrayList<>();
+    private List <Applicant> applicantList = new ArrayList<>();
+    private Storage goods = new Storage();
 }
