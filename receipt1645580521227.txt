@@ -1,3 +1,0 @@
-	 -----------Damzxyno Food Store-----------
- Product name ---- Price ---- Units ----  Total Price
-1. HoneyWell Wheat	 | 900.0	 | 9	 |  8100.0
