@@ -82,43 +82,38 @@ public class AdministrativeOperationsImplTest {
         customerOperations.joinQueue(store,customer);
         customer.setCheckOut(true);
         customer.isCheckOut();
-        administrativeOperations.sellProductWithPriorityQueue(cashier, customer,store);
+
 
         customerOperations.fundWallet(customer2, 200000);
         customerOperations.addProductToCart(store, customer2, "DAMFS-CSP-006", 1);
         customerOperations.joinQueue(store,customer2);
         customer2.setCheckOut(true);
         customer2.isCheckOut();
-        administrativeOperations.sellProductWithPriorityQueue(cashier, customer2,store);
 
         customerOperations.fundWallet(customer3, 10_000);
         customerOperations.addProductToCart(store, customer3, "DAMFS-CSP-006", 3);
         customerOperations.joinQueue(store,customer3);
         customer3.setCheckOut(true);
         customer3.isCheckOut();
-        administrativeOperations.sellProductWithPriorityQueue(cashier, customer3,store);
-
 
         customerOperations.fundWallet(customer4, 10_000);
         customerOperations.addProductToCart(store, customer4, "DAMFS-CSP-006", 4);
         customerOperations.joinQueue(store,customer4);
         customer4.setCheckOut(true);
         customer4.isCheckOut();
-        administrativeOperations.sellProductWithPriorityQueue(cashier, customer4,store);
 
 
-        String expected = "1Tola 2Steve 3Emeke 4Sade";
+        String expected = "1Tola 2Steve 3Emeka 4Sade";
         String actualSequence = "";
         int count = 1;
 
-        System.out.println(store.getCartListQueue().isEmpty());
         while (!store.getCartListQueue().isEmpty()){
             Customer customer = store.getCartListQueue().poll();
 
             actualSequence +=count+customer.getFirstName()+" ";
             count++;
         }
-        System.out.println("print");
+
         System.out.println(actualSequence);
         assertEquals(expected, actualSequence.trim());
     }
