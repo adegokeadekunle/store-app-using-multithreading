@@ -2,8 +2,7 @@ package models;
 
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Setter
@@ -16,4 +15,7 @@ public class Store {
     private List <Staff> staffList = new ArrayList<>();
     private List <Applicant> applicantList = new ArrayList<>();
     private Storage goods = new Storage();
+    private List<Product> productList;
+    private CustomPriorityQueue cartListQueue = new CustomPriorityQueue();
+   // private PriorityQueue<Customer> cartListQueue = new PriorityQueue<>();
 }

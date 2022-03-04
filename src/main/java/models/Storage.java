@@ -9,12 +9,12 @@ public class Storage {
         Product [] temp = products.clone();
         products = new Product [products.length + 1];
         System.arraycopy(temp, 0, products, 0, products.length - 1);
-        products[products.length- 1] = product;
+        products[products.length- 1 ] = product;
     }
 
     public boolean contains(String productID){
-        for(Product good : products)
-            if(good.getProductID().equals(productID)) return true;
+        for(Product goods : products)
+            if(goods.getProductID().equals(productID)) return true;
         return false;
     }
 

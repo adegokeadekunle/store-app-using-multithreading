@@ -1,73 +1,77 @@
 import enums.Designation;
 import enums.Gender;
 import enums.Qualification;
-import exceptions.NotAuthorizedException;
-import exceptions.OutOfStockException;
-import exceptions.StockDoesNotExistException;
+import exceptions.*;
 import models.*;
 import operations.implementations.AdministrativeOperationsImpl;
+import operations.implementations.ApplicantOperationImpl;
 import operations.implementations.CustomerOperationsImpl;
 
 import java.util.Arrays;
 
 public class Main {
 
-    public static void main(String[] args) throws NotAuthorizedException, OutOfStockException, StockDoesNotExistException {
+    public static void main(String[] args) throws NotAuthorizedException, OutOfStockException, StockDoesNotExistException, InvalidOperationException, InsufficientFundException {
         Store decagonEnt = new Store("Decagon Enterprise");
-        Staff mike = new Staff("Mike","Peter", Gender.MALE, Designation.MANAGER);
-        Staff mary = new Staff("Mary","Samuel",Gender.FEMALE,Designation.CASHIER);
-        Customer mercy = new Customer("Mercy","Maxwell",Gender.FEMALE);
-        Applicant sammie = new Applicant("Sammie","Richard",Gender.MALE, Qualification.OND);
+        Staff mike = new Staff("Mike", "Peter", Gender.MALE, Designation.MANAGER);
+        Staff mary = new Staff("Mary", "Samuel", Gender.FEMALE, Designation.CASHIER);
+        Customer mercy = new Customer("Mercy", "Maxwell", Gender.FEMALE);
+        Applicant sammie = new Applicant("Sammie", "Richard", Gender.MALE, Qualification.OND);
         CustomerOperationsImpl customerOperations = new CustomerOperationsImpl();
         AdministrativeOperationsImpl administrativeOperations = new AdministrativeOperationsImpl();
-        administrativeOperations.loadProductsFromExcelFile(decagonEnt,mike,"src/main/resources/excel_files/decagon_Ent_products.xlsx");
+        ApplicantOperationImpl applicantOperation = new ApplicantOperationImpl();
+        Product milk = new Product("sh22", "Milk", "diary", 25000, 10);
+        Customer caleb = new Customer("Caleb", "Max", Gender.MALE);
+        Customer smith = new Customer("Smith", "Matty", Gender.MALE);
+        Customer deen = new Customer("Abi", "Deen", Gender.MALE);
+        Customer evelyn = new Customer("Evlyn", "Morris", Gender.FEMALE);
+
+        administrativeOperations.loadProductsFromExcelFile(decagonEnt, mike, "src/main/resources/excel_files/decagon_Ent_products.xlsx");
 
         System.out.println(Arrays.toString(new Storage[]{decagonEnt.getGoods()}));
 
-        customerOperations.addProductToCart(decagonEnt,mercy,"DAMFS-CER-001",10);
+        caleb.setWallet(1000000);
+        customerOperations.addProductToCart(decagonEnt, caleb, "DAMFS-CER-001", 5);
+        customerOperations.joinQueue(decagonEnt, caleb);
+        caleb.setCheckOut(true);
+
+
+        smith.setWallet(1000000);
+        customerOperations.addProductToCart(decagonEnt, smith, "DAMFS-CER-001", 1);
+        customerOperations.joinQueue(decagonEnt, smith);
+        smith.setCheckOut(true);
+
 
         mercy.setWallet(1000000);
-        mercy.getCart().put("Kellogs",10);
+        customerOperations.addProductToCart(decagonEnt, mercy, "DAMFS-CER-001", 3);
+        customerOperations.joinQueue(decagonEnt, mercy);
         mercy.setCheckOut(true);
-        mercy.isCheckOut();
+
+        deen.setWallet(1000000);
+        customerOperations.addProductToCart(decagonEnt, deen, "DAMFS-CER-001", 2);
+        customerOperations.joinQueue(decagonEnt, deen);
+        deen.setCheckOut(true);
+
+        evelyn.setWallet(1000000);
+        customerOperations.addProductToCart(decagonEnt, evelyn, "DAMFS-CER-001", 4);
+        customerOperations.joinQueue(decagonEnt, evelyn);
+        evelyn.setCheckOut(true);
+
+        administrativeOperations.sellProductWithPriorityQueue(mary, caleb, decagonEnt);
+        administrativeOperations.sellProductWithPriorityQueue(mary, mercy, decagonEnt);
+        administrativeOperations.sellProductWithPriorityQueue(mary, smith, decagonEnt);
+        administrativeOperations.sellProductWithPriorityQueue(mary, deen, decagonEnt);
+        administrativeOperations.sellProductWithPriorityQueue(mary, evelyn, decagonEnt);
+        System.out.println(decagonEnt.getCartListQueue());
+
+
         System.out.println(mercy.getCart());
         System.out.println(mercy.getTotalGoodsPrice());
+        System.out.println(caleb.getCart());
+        System.out.println(caleb.getTotalGoodsPrice());
+        System.out.println(smith.getCart());
+        System.out.println(smith.getTotalGoodsPrice());
 
-        // Storage storage = new Storage();
-//        Product rice = new Product("","","",32,32);
-//        decagonEnt..storage.add(rice);
-//        decagonEnt.getGoods().add(rice);
-//        System.out.println(decagonEnt.getGoods());;
-//
-//        mercy.setWallet(100000);
-//        mercy.getCart().put("rice",1);
-//        mercy.setCheckOut(true);
-//        mercy.isCheckOut();
-        // mercy.setTotalGoodsPrice(10000);
-//        System.out.println(mercy.getTotalGoodsPrice());
-  }
+
+    }
 }
-
-//    Company company = new Company("Damzxyno");
-//    Company newComa = new Company("Wilfred Store");
-//
-//
-//        System.out.println(newComa.getCompanyGoods()[0]);
-//                Staff staff = new Staff("","","");
-//                company.setCompanyGoods(new Product [9]);
-//                company.setCompanyGoods(new String [9]);
-//                newComa.getStaffList().add()
-//                System.out.println(Arrays.toString(company.getCompanyGoods()));
-//                System.out.println(company);
-//                }
-//
-//public void addProduct(Product product){
-//        Product [] temp = companyGoods.clone();
-//        int size = companyGoods.length;
-//        companyGoods = new Product [++size];
-//        for (int i = 0; i < size-1; i++){
-//        companyGoods[i] = temp[i];
-//        }
-//        companyGoods[size -1] = product;
-//
-//        String filePath = "src/main/resources/excel_files/damzxyno_food_store.xlsx";

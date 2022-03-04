@@ -11,7 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 
 public class AdministrativeOperationsImpl implements AdministrativeOperations {
 
@@ -37,6 +37,19 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
         } else throw new NotAuthorizedException ("Only Manager can load product into store!");
     }
 
+
+    public void sellProductWithPriorityQueue(Staff staff, Customer customer, Store store) throws InvalidOperationException, NotAuthorizedException {
+        if (staff.getDesignation().equals(Designation.MANAGER)) throw new NotAuthorizedException("Only Cashiers can sell and dispense receipts to customers!");
+   //     else if (!customer.isCheckOut()) throw new InvalidOperationException("Customer has not checked out!");
+        while (!store.getCartListQueue().isEmpty()){
+            Customer customer1 = store.getCartListQueue().poll();
+            sellProductsInCart(store,staff,customer1);
+
+        }
+
+
+    }
+
     @Override
     public String sellProductsInCart(Store company, Staff staff, Customer customer) throws NotAuthorizedException, InvalidOperationException {
         StringBuilder receiptBody = new StringBuilder();
@@ -44,6 +57,7 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
         else if (!customer.isCheckOut()) throw new InvalidOperationException("Customer has not checked out!");
         else {
             String heading = "\t -----------" + company.getStoreName() + "-----------"
+                    +"\n -----------thanks for shopping with us "+customer.getFirstName()+"-----------"
                     + "\n Product name ---- " + "Price ---- "
                     + "Units ---- " + " Total Price";
             receiptBody.append(heading);
@@ -100,6 +114,32 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
                 + product.getProductPrice() * quantityBought;
     }
 
+
 }
 
 
+//
+//    public void sellProductWithPriorityQueue(Staff staff, Customer customer, Store store,Product product) throws InvalidOperationException, NotAuthorizedException {
+//        if (store.getCartListQueue().contains(store.getProductList())
+//                && !product.getProductName().contains((CharSequence) store.getProductList())) {
+//            Iterator<Customer> customerIterator = store.getCartListQueue().iterator();
+//            while(customerIterator.hasNext())
+//                sellProductsInCart(store,staff,store.getCartListQueue().poll());
+////use a forEachLoop
+//        }
+//        else if (store.getCartListQueue().contains(store.getProductList())
+//                && product.getProductName().contains((CharSequence) store.getProductList())) {
+//
+//            PriorityQueue<Customer> newQueue= store.getCartListQueue();
+//
+//
+//
+//            Iterator<Customer> customerIterator = store.getCartListQueue().iterator();
+//            while(customerIterator.hasNext())
+//                sellProductsInCart(store,staff,store.getCartListQueue().poll());
+//
+//        }
+//
+//
+//
+//    }

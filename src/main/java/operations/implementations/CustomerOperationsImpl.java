@@ -3,6 +3,7 @@ package operations.implementations;
 import exceptions.InsufficientFundException;
 import exceptions.OutOfStockException;
 import exceptions.StockDoesNotExistException;
+import models.Product;
 import models.Store;
 import models.Customer;
 import operations.interfaces.CustomerOperations;
@@ -15,12 +16,13 @@ public class CustomerOperationsImpl implements CustomerOperations {
             customer.getCart().merge(productID, quantity, Integer::sum);
             customer.setTotalGoodsPrice(company.getGoods().get(productID).getProductPrice() * quantity + customer.getTotalGoodsPrice());
     }
-    @Override
-    public void purchaseGoodsInCart(Customer customer) throws InsufficientFundException{
-        if (customer.getTotalGoodsPrice() > customer.getWallet()) throw new InsufficientFundException("Customer doesn't have sufficient fund!");
-        else customer.setCheckOut(true);
-    }
 
+    @Override
+    public void joinQueue(Store store, Customer customer){
+        if (!customer.getCart().isEmpty()) {
+            store.getCartListQueue().add(customer);
+        }
+    }
 
     @Override
     public void fundWallet(Customer customer, double amount){customer.setWallet(amount + customer.getWallet());}

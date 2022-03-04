@@ -43,13 +43,13 @@ public class CustomerOperationsImplTest {
     }
 
     @Test
-    public void shouldThrowOutOfStockExceptionWhenGoodsIsFinishedOrZero() throws OutOfStockException, StockDoesNotExistException, InsufficientFundException, InvalidOperationException, NotAuthorizedException {
+    public void shouldThrowOutOfStockExceptionWhenGoodsIsMoreThanWhatIsInStock() throws OutOfStockException, StockDoesNotExistException, InsufficientFundException, InvalidOperationException, NotAuthorizedException {
         Customer customer2 = new Customer("Oluwaseun", "Idris", Gender.MALE);
         Staff cashier = new Staff("Mope", "Oke", Gender.FEMALE, Designation.CASHIER);
 
         customerOperations.addProductToCart(store, customer1, "DAMFS-BEV-004", 20);
         customerOperations.fundWallet(customer1, 70_000);
-        customerOperations.purchaseGoodsInCart(customer1);
+        customerOperations.joinQueue(store,customer1);
         administrativeOperations.sellProductsInCart(store, cashier, customer1);
 
         assertThrows(OutOfStockException.class, ()->
@@ -63,7 +63,7 @@ public class CustomerOperationsImplTest {
 
     @Test
     public void shouldCheckOutCustomer() throws InsufficientFundException {
-        customerOperations.purchaseGoodsInCart(customer1);
+        customerOperations.joinQueue(store,customer1);
         assertTrue(customer1.isCheckOut());
     }
 
