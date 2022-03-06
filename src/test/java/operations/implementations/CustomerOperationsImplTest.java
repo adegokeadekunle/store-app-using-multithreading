@@ -49,6 +49,7 @@ public class CustomerOperationsImplTest {
 
         customerOperations.addProductToCart(store, customer1, "DAMFS-BEV-004", 20);
         customerOperations.fundWallet(customer1, 70_000);
+        customer1.setCheckOut(true);
         customerOperations.joinQueue(store,customer1);
         administrativeOperations.sellProductsInCart(store, cashier, customer1);
 
@@ -63,6 +64,7 @@ public class CustomerOperationsImplTest {
 
     @Test
     public void shouldCheckOutCustomer() throws InsufficientFundException {
+        customer1.setCheckOut(true);
         customerOperations.joinQueue(store,customer1);
         assertTrue(customer1.isCheckOut());
     }

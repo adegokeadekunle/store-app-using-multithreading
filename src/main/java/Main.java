@@ -31,13 +31,13 @@ public class Main {
         System.out.println(Arrays.toString(new Storage[]{decagonEnt.getGoods()}));
 
         caleb.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, caleb, "DAMFS-CER-001", 5);
+        customerOperations.addProductToCart(decagonEnt, caleb, "DAMFS-CER-001", 2);
         customerOperations.joinQueue(decagonEnt, caleb);
         caleb.setCheckOut(true);
 
 
         smith.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, smith, "DAMFS-CER-001", 1);
+        customerOperations.addProductToCart(decagonEnt, smith, "DAMFS-CER-002", 3);
         customerOperations.joinQueue(decagonEnt, smith);
         smith.setCheckOut(true);
 
@@ -48,29 +48,30 @@ public class Main {
         mercy.setCheckOut(true);
 
         deen.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, deen, "DAMFS-CER-001", 2);
+        customerOperations.addProductToCart(decagonEnt, deen, "DAMFS-CER-001", 5);
         customerOperations.joinQueue(decagonEnt, deen);
         deen.setCheckOut(true);
 
         evelyn.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, evelyn, "DAMFS-CER-001", 4);
+        customerOperations.addProductToCart(decagonEnt, evelyn, "DAMFS-CER-002", 2);
         customerOperations.joinQueue(decagonEnt, evelyn);
         evelyn.setCheckOut(true);
 
-        administrativeOperations.sellProductWithPriorityQueue(mary, caleb, decagonEnt);
-        administrativeOperations.sellProductWithPriorityQueue(mary, mercy, decagonEnt);
-        administrativeOperations.sellProductWithPriorityQueue(mary, smith, decagonEnt);
-        administrativeOperations.sellProductWithPriorityQueue(mary, deen, decagonEnt);
-        administrativeOperations.sellProductWithPriorityQueue(mary, evelyn, decagonEnt);
+        System.out.println(decagonEnt.getCartListQueue());
+        administrativeOperations.sellProductWithPriorityQueue(mary, decagonEnt);
+//        administrativeOperations.sellProductWithPriorityQueue(mary, mercy, decagonEnt);
+//        administrativeOperations.sellProductWithPriorityQueue(mary, smith, decagonEnt);
+//        administrativeOperations.sellProductWithPriorityQueue(mary, deen, decagonEnt);
+//        administrativeOperations.sellProductWithPriorityQueue(mary, evelyn, decagonEnt);
         System.out.println(decagonEnt.getCartListQueue());
 
 
-        System.out.println(mercy.getCart());
-        System.out.println(mercy.getTotalGoodsPrice());
-        System.out.println(caleb.getCart());
-        System.out.println(caleb.getTotalGoodsPrice());
-        System.out.println(smith.getCart());
-        System.out.println(smith.getTotalGoodsPrice());
+//        System.out.println(mercy.getCart());
+//        System.out.println(mercy.getTotalGoodsPrice());
+//        System.out.println(caleb.getCart());
+//        System.out.println(caleb.getTotalGoodsPrice());
+//        System.out.println(smith.getCart());
+//        System.out.println(smith.getTotalGoodsPrice());
 
 
     }

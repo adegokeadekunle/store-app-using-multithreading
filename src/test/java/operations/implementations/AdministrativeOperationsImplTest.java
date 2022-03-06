@@ -16,10 +16,10 @@ public class AdministrativeOperationsImplTest {
     Store store = new Store("Damzxyno Food Store");
     Staff cashier = new Staff("Mary", "Ololade", Gender.FEMALE, Designation.CASHIER);
     Staff manager = new Staff("Wilfred", "Omokpo", Gender.MALE, Designation.MANAGER);
-    Customer customer = new Customer("Sade", "Oluwaseyi", Gender.FEMALE);
-    Customer customer2 = new Customer("Tola", "Samuel", Gender.MALE);
-    Customer customer3 = new Customer("Steve", "Mathew", Gender.MALE);
-    Customer customer4 = new Customer("Emeka", "Chibuzor", Gender.MALE);
+    Customer sade = new Customer("Sade", "Oluwaseyi", Gender.FEMALE);
+    Customer tola = new Customer("Tola", "Samuel", Gender.MALE);
+    Customer steve = new Customer("Steve", "Mathew", Gender.MALE);
+    Customer emeka = new Customer("Emeka", "Chibuzor", Gender.MALE);
     String excelFilePath = "src/main/resources/excel_files/decagon_Ent_products.xlsx";
 
     @Test
@@ -39,28 +39,28 @@ public class AdministrativeOperationsImplTest {
     @Test
     public void testForUnAuthorizedPersonSellingToCustomer() throws NotAuthorizedException, OutOfStockException, StockDoesNotExistException{
         administrativeOperations.loadProductsFromExcelFile(store, manager, excelFilePath);
-        customerOperations.addProductToCart(store, customer, "DAMFS-CSP-006", 9);
+        customerOperations.addProductToCart(store, sade, "DAMFS-CSP-006", 9);
 
-        assertThrows(NotAuthorizedException.class, ()-> administrativeOperations.sellProductsInCart(store, manager, customer));
+        assertThrows(NotAuthorizedException.class, ()-> administrativeOperations.sellProductsInCart(store, manager, sade));
     }
 
     @Test
     public void testForSellingToCustomerThatHasNotCheckedOut() throws NotAuthorizedException, OutOfStockException, StockDoesNotExistException{
         administrativeOperations.loadProductsFromExcelFile(store, manager, excelFilePath);
-        customerOperations.addProductToCart(store, customer, "DAMFS-CSP-006", 9);
+        customerOperations.addProductToCart(store, sade, "DAMFS-CSP-006", 9);
 
-        assertThrows(InvalidOperationException.class, ()-> administrativeOperations.sellProductsInCart(store, cashier, customer));
+        assertThrows(InvalidOperationException.class, ()-> administrativeOperations.sellProductsInCart(store, cashier, sade));
     }
 
     @Test
     public void companyProductShouldReduceAfterPurchase() throws NotAuthorizedException, OutOfStockException, StockDoesNotExistException, InsufficientFundException, InvalidOperationException {
         administrativeOperations.loadProductsFromExcelFile(store, manager, excelFilePath);
         assertEquals(13, store.getGoods().get("DAMFS-CSP-006").getProductQuantity());
-        customerOperations.fundWallet(customer, 10_000);
-        customerOperations.addProductToCart(store, customer, "DAMFS-CSP-006", 9);
-        customerOperations.joinQueue(store,customer);
-        customer.setCheckOut(true);
-        administrativeOperations.sellProductsInCart(store, cashier, customer);
+        customerOperations.fundWallet(sade, 10_000);
+        customerOperations.addProductToCart(store, sade, "DAMFS-CSP-006", 9);
+        customerOperations.joinQueue(store, sade);
+        sade.setCheckOut(true);
+        administrativeOperations.sellProductsInCart(store, cashier, sade);
         assertEquals(4, store.getGoods().get("DAMFS-CSP-006").getProductQuantity());
     }
 
@@ -73,39 +73,90 @@ public class AdministrativeOperationsImplTest {
     }
 
     @Test
-    public void shouldCheckIfQueueFollowPriority() throws InvalidOperationException, NotAuthorizedException, OutOfStockException, StockDoesNotExistException, InsufficientFundException {
+    public void shouldCheckIfQueueSellToTheLowestQuantity() throws InvalidOperationException, NotAuthorizedException, OutOfStockException, StockDoesNotExistException, InsufficientFundException {
        administrativeOperations.loadProductsFromExcelFile(store, manager, excelFilePath);
 
 
-        customerOperations.fundWallet(customer, 200000);
-        customerOperations.addProductToCart(store, customer, "DAMFS-CSP-006", 5);
-        customerOperations.joinQueue(store,customer);
-        customer.setCheckOut(true);
-        customer.isCheckOut();
+        customerOperations.fundWallet(sade, 200000);
+        customerOperations.addProductToCart(store, sade, "DAMFS-CSP-006", 5);
+        customerOperations.joinQueue(store, sade);
+        sade.setCheckOut(true);
+        sade.isCheckOut();
 
 
-        customerOperations.fundWallet(customer2, 200000);
-        customerOperations.addProductToCart(store, customer2, "DAMFS-CSP-006", 1);
-        customerOperations.joinQueue(store,customer2);
-        customer2.setCheckOut(true);
-        customer2.isCheckOut();
+        customerOperations.fundWallet(tola, 200000);
+        customerOperations.addProductToCart(store, tola, "DAMFS-CSP-006", 1);
+        customerOperations.joinQueue(store, tola);
+        tola.setCheckOut(true);
+        tola.isCheckOut();
 
-        customerOperations.fundWallet(customer3, 10_000);
-        customerOperations.addProductToCart(store, customer3, "DAMFS-CSP-006", 3);
-        customerOperations.joinQueue(store,customer3);
-        customer3.setCheckOut(true);
-        customer3.isCheckOut();
+        customerOperations.fundWallet(steve, 10_000);
+        customerOperations.addProductToCart(store, steve, "DAMFS-CSP-006", 3);
+        customerOperations.joinQueue(store, steve);
+        steve.setCheckOut(true);
+        steve.isCheckOut();
 
-        customerOperations.fundWallet(customer4, 10_000);
-        customerOperations.addProductToCart(store, customer4, "DAMFS-CSP-006", 4);
-        customerOperations.joinQueue(store,customer4);
-        customer4.setCheckOut(true);
-        customer4.isCheckOut();
+        customerOperations.fundWallet(emeka, 10_000);
+        customerOperations.addProductToCart(store, emeka, "DAMFS-CSP-006", 4);
+        customerOperations.joinQueue(store, emeka);
+        emeka.setCheckOut(true);
+        emeka.isCheckOut();
 
 
         String expected = "1Tola 2Steve 3Emeka 4Sade";
         String actualSequence = "";
         int count = 1;
+
+        while (!store.getCartListQueue().isEmpty()){
+            Customer customer = store.getCartListQueue().poll();
+
+            actualSequence +=count+customer.getFirstName()+" ";
+            count++;
+        }
+
+        System.out.println(actualSequence);
+        assertEquals(expected, actualSequence.trim());
+    }
+    @Test
+    public void shouldCheckIfQueueFollowNaturalOrder() throws InvalidOperationException, NotAuthorizedException, OutOfStockException, StockDoesNotExistException, InsufficientFundException {
+        administrativeOperations.loadProductsFromExcelFile(store, manager, excelFilePath);
+
+
+        customerOperations.fundWallet(sade, 200000);
+        customerOperations.addProductToCart(store, sade, "DAMFS-CSP-006", 5);
+        customerOperations.joinQueue(store, sade);
+        sade.setCheckOut(true);
+        sade.isCheckOut();
+
+
+        customerOperations.fundWallet(tola, 200000);
+        customerOperations.addProductToCart(store, tola, "DAMFS-CER-001", 1);
+        customerOperations.joinQueue(store, tola);
+        tola.setCheckOut(true);
+        tola.isCheckOut();
+
+        customerOperations.fundWallet(steve, 10_000);
+        customerOperations.addProductToCart(store, steve, "DAMFS-CSP-006", 3);
+        customerOperations.joinQueue(store, steve);
+        steve.setCheckOut(true);
+        steve.isCheckOut();
+
+        customerOperations.fundWallet(emeka, 10_000);
+        customerOperations.addProductToCart(store, emeka, "DAMFS-CSP-006", 4);
+        customerOperations.joinQueue(store, emeka);
+        emeka.setCheckOut(true);
+        emeka.isCheckOut();
+
+
+        String expected = "1Steve 2Emeka 3Sade 4Tola";
+        String actualSequence = "";
+        int count = 1;
+
+//        Customer customer = store.getCartListQueue().poll();
+//        assertEquals(customer.getFirstName(), steve.getFirstName());
+//
+//        Customer customer1 = store.getCartListQueue().poll();
+//        assertEquals(customer1.getFirstName(), emeka.getFirstName());
 
         while (!store.getCartListQueue().isEmpty()){
             Customer customer = store.getCartListQueue().poll();

@@ -8,6 +8,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@ToString
 public class Customer extends Person{
     private double wallet = 0.0;
     private boolean checkOut = false;

@@ -38,11 +38,12 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
     }
 
 
-    public void sellProductWithPriorityQueue(Staff staff, Customer customer, Store store) throws InvalidOperationException, NotAuthorizedException {
+    public void sellProductWithPriorityQueue(Staff staff, Store store) throws InvalidOperationException, NotAuthorizedException {
         if (staff.getDesignation().equals(Designation.MANAGER)) throw new NotAuthorizedException("Only Cashiers can sell and dispense receipts to customers!");
    //     else if (!customer.isCheckOut()) throw new InvalidOperationException("Customer has not checked out!");
         while (!store.getCartListQueue().isEmpty()){
             Customer customer1 = store.getCartListQueue().poll();
+            System.out.println(customer1.getFirstName());
             sellProductsInCart(store,staff,customer1);
 
         }
