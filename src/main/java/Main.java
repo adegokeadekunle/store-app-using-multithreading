@@ -37,7 +37,7 @@ public class Main {
 
 
         smith.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, smith, "DAMFS-CER-002", 3);
+        customerOperations.addProductToCart(decagonEnt, smith, "DAMFS-CER-002", 1);
         customerOperations.joinQueue(decagonEnt, smith);
         smith.setCheckOut(true);
 
@@ -48,30 +48,24 @@ public class Main {
         mercy.setCheckOut(true);
 
         deen.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, deen, "DAMFS-CER-001", 5);
+        customerOperations.addProductToCart(decagonEnt, deen, "DAMFS-CER-002", 3);
         customerOperations.joinQueue(decagonEnt, deen);
         deen.setCheckOut(true);
 
         evelyn.setWallet(1000000);
-        customerOperations.addProductToCart(decagonEnt, evelyn, "DAMFS-CER-002", 2);
+        customerOperations.addProductToCart(decagonEnt, evelyn, "DAMFS-CER-001", 2);
         customerOperations.joinQueue(decagonEnt, evelyn);
         evelyn.setCheckOut(true);
 
         System.out.println(decagonEnt.getCartListQueue());
-        administrativeOperations.sellProductWithPriorityQueue(mary, decagonEnt);
-//        administrativeOperations.sellProductWithPriorityQueue(mary, mercy, decagonEnt);
-//        administrativeOperations.sellProductWithPriorityQueue(mary, smith, decagonEnt);
-//        administrativeOperations.sellProductWithPriorityQueue(mary, deen, decagonEnt);
-//        administrativeOperations.sellProductWithPriorityQueue(mary, evelyn, decagonEnt);
-        System.out.println(decagonEnt.getCartListQueue());
 
 
-//        System.out.println(mercy.getCart());
-//        System.out.println(mercy.getTotalGoodsPrice());
-//        System.out.println(caleb.getCart());
-//        System.out.println(caleb.getTotalGoodsPrice());
-//        System.out.println(smith.getCart());
-//        System.out.println(smith.getTotalGoodsPrice());
+        ThreadedClass.cashierThread(decagonEnt,mary);
+
+//        administrativeOperations.sellProductWithPriorityQueue(mary, decagonEnt);
+//        System.out.println(decagonEnt.getCartListQueue());
+
+
 
 
     }

@@ -20,7 +20,7 @@ public class CustomerOperationsImpl implements CustomerOperations {
     @Override
     public void joinQueue(Store store, Customer customer){
         if (!customer.getCart().isEmpty()) {
-            store.getCartListQueue().add(customer);
+            store.getCustomerList().add(customer);
         }
     }
 

@@ -4,6 +4,7 @@ import enums.Designation;
 import enums.Qualification;
 import exceptions.InvalidOperationException;
 import exceptions.NotAuthorizedException;
+import exceptions.OutOfStockException;
 import models.*;
 import operations.interfaces.AdministrativeOperations;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -12,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public class AdministrativeOperationsImpl implements AdministrativeOperations {
 
@@ -38,7 +40,7 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
     }
 
 
-    public void sellProductWithPriorityQueue(Staff staff, Store store) throws InvalidOperationException, NotAuthorizedException {
+    public void sellProductWithPriorityQueue(Staff staff, Store store) throws InvalidOperationException, NotAuthorizedException, OutOfStockException {
         if (staff.getDesignation().equals(Designation.MANAGER)) throw new NotAuthorizedException("Only Cashiers can sell and dispense receipts to customers!");
    //     else if (!customer.isCheckOut()) throw new InvalidOperationException("Customer has not checked out!");
         while (!store.getCartListQueue().isEmpty()){
@@ -51,19 +53,23 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
 
     }
 
+
+
     @Override
-    public String sellProductsInCart(Store company, Staff staff, Customer customer) throws NotAuthorizedException, InvalidOperationException {
-        StringBuilder receiptBody = new StringBuilder();
+    public Callable<String> sellProductsInCart(Store company, Staff staff, Customer customer) throws NotAuthorizedException, InvalidOperationException, OutOfStockException {
+        StringBuffer receiptBody = new StringBuffer();
         if (!staff.getDesignation().equals(Designation.CASHIER)) throw new NotAuthorizedException("Only Cashiers can sell and dispense receipts to customers!");
         else if (!customer.isCheckOut()) throw new InvalidOperationException("Customer has not checked out!");
         else {
+
+            company.getWriteLock().lock();
             String heading = "\t -----------" + company.getStoreName() + "-----------"
                     +"\n -----------thanks for shopping with us "+customer.getFirstName()+"-----------"
                     + "\n Product name ---- " + "Price ---- "
                     + "Units ---- " + " Total Price";
             receiptBody.append(heading);
             int snNum = 1;
-
+//try{
             for (var product : customer.getCart().entrySet()) {
                 String productID = product.getKey();
                 int quantityBought = product.getValue();
@@ -81,9 +87,11 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
             company.setStoreAccount(customer.getTotalGoodsPrice() + company.getStoreAccount());
             createAFileToSaveData("receipt" + new Date().getTime() + ".txt", receiptBody.toString());
             customer.getCart().clear();
+//        } finally {
+//                company.getWriteLock().unlock();
+//            }
         }
-
-        return receiptBody.toString();
+        return ()-> Thread.currentThread().getName() + ": " + receiptBody;
     }
 
     @Override
@@ -103,8 +111,19 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
 
     }
 
-    private void reduceCompanyProduct(Product companyProduct, int quantityBought){
-        companyProduct.setProductQuantity(companyProduct.getProductQuantity() - quantityBought);
+    private void reduceCompanyProduct(Product companyProduct, int quantityBought)  {
+
+            if (companyProduct.getProductQuantity() >= quantityBought) {
+                companyProduct.setProductQuantity(companyProduct.getProductQuantity() - quantityBought);
+            }
+            else  {
+                try {
+                    throw new OutOfStockException("Product out of stock !");
+                } catch (OutOfStockException e) {
+                    e.printStackTrace();
+                }
+            }
+
 
     }
 
@@ -142,5 +161,11 @@ public class AdministrativeOperationsImpl implements AdministrativeOperations {
 //        }
 //
 //
+//
+//    }
+//    public Stream<CompletableFuture<Customer> > sellByThread(Staff staff, Store store ){
+//        var thread = store.getCartListQueue();
+//
+//        return  thread.stream()
 //
 //    }

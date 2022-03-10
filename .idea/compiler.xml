@@ -9,5 +9,8 @@
         <module name="store_solution" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Store_App_From_Exel" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

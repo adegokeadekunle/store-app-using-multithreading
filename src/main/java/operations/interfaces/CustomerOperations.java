@@ -3,8 +3,8 @@ package operations.interfaces;
 import exceptions.InsufficientFundException;
 import exceptions.OutOfStockException;
 import exceptions.StockDoesNotExistException;
-import models.Store;
 import models.Customer;
+import models.Store;
 
 public interface CustomerOperations extends  CommonOperations {
      void addProductToCart(Store company, Customer customer, String productID, int quantity) throws OutOfStockException, StockDoesNotExistException;
