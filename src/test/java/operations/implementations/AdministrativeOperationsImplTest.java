@@ -170,10 +170,10 @@ public class AdministrativeOperationsImplTest {
 //    }
 
     @Test
-    public void shouldCheckNumberCustomersInTheCustomerList() throws OutOfStockException, InvalidOperationException, NotAuthorizedException {
-        ExecutorService executor = null;
+    public void shouldCheckAllCustomersBought() throws OutOfStockException, InvalidOperationException, NotAuthorizedException {
+        ExecutorService executor ;
         while (!store.getCustomerList().isEmpty()) {
-            executor = Executors.newFixedThreadPool(6);
+            executor = Executors.newFixedThreadPool(5);
             Callable<String> callable;
             Set<Callable<String>> callableSet;
 
@@ -200,11 +200,12 @@ public class AdministrativeOperationsImplTest {
 
 
             }
-            assertEquals(5,store.getCustomerList().size());
+
+
 
         }
      //  executor.shutdown();
-
+        assertEquals(0,store.getCustomerList().size());
 
     }
 }

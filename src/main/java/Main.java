@@ -57,7 +57,7 @@ public class Main {
         customerOperations.joinQueue(decagonEnt, evelyn);
         evelyn.setCheckOut(true);
 
-        System.out.println(decagonEnt.getCartListQueue());
+       // System.out.println(decagonEnt.getCartListQueue());
 
 
         ThreadedClass.cashierThread(decagonEnt,mary);

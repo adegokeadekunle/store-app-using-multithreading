@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 public class ThreadedClass {
-   static ExecutorService executor = Executors.newFixedThreadPool(6);
+   static ExecutorService executor = Executors.newFixedThreadPool(3);
 
     public static  void cashierThread(Store store, Staff staff) throws InvalidOperationException, NotAuthorizedException, OutOfStockException {
 
